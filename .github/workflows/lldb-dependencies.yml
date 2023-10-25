@@ -31,42 +31,16 @@ jobs:
           swift_release_tags=$(yq eval '.[] | select(.platforms[].name == "Windows 10") | .tag' swift-org/_data/builds/swift_releases.yml)
           readarray -t swift_release_tags_array <<< "$swift_release_tags"
           echo "tags=${swift_release_tags_array[*]}" >> $GITHUB_OUTPUT
-      - name: Setup Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: |
-            3.5
-            3.6
-            3.7
-            3.8
-            3.9
-            3.10
-            3.11
-            3.12
       - name: Setup Visual Studio shell
         uses: egor-tensin/vs-shell@v2
-      - name: Download and set up WiX v4
-        id: setup-wix
-        run: |
-          # Download and extract WiX v4 from NuGet
-          $wixPath = Join-Path $env:TEMP wix4
-          $wixArchivePath = Join-Path $env:TEMP wix4.nupkg.zip
-          Invoke-WebRequest -Uri "https://www.nuget.org/api/v2/package/wix" -OutFile $wixArchivePath
-          Expand-Archive -Path $wixArchivePath -DestinationPath $wixPath -Force
-
-          # Save WiX executable path to output
-          $wixPath = Join-Path $env:TEMP wix4 tools net6.0 any wix.exe
-          "path=$wixPath" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
       - name: Collect LLDB dependencies
         id: collect
         env:
           SWIFT_TAGS: ${{ steps.swift-release.outputs.tags }}
-          WIX_PATH: ${{ steps.setup-wix.outputs.path }}
         run: |
           # Read in Swift on Windows release tags
           Write-Output "::group::Fetch Swift on Windows release tags"
           $tags = $env:SWIFT_TAGS -split ' '
-          $wixPath = $env:WIX_PATH
           Write-Output "Find $($tags.count) Swift on Windows releases."
           Write-Output "::endgroup::"
           $collectedTags = @()
