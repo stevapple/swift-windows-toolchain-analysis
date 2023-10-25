@@ -1,0 +1,46 @@
+Microsoft (R) COFF/PE Dumper Version 14.35.32217.1
+Copyright (C) Microsoft Corporation.  All rights reserved.
+
+
+Dump of file C:\Library\Developer\Toolchains\unknown-Asserts-development.xctoolchain\usr\bin\liblldb.dll
+
+File Type: DLL
+
+  Image has the following dependencies:
+
+    python37.dll
+    dbghelp.dll
+    RPCRT4.dll
+    VERSION.dll
+    WS2_32.dll
+    PSAPI.DLL
+    ADVAPI32.dll
+    KERNEL32.dll
+    OLEAUT32.dll
+    MSVCP140.dll
+    VCRUNTIME140.dll
+    VCRUNTIME140_1.dll
+    api-ms-win-crt-runtime-l1-1-0.dll
+    api-ms-win-crt-heap-l1-1-0.dll
+    api-ms-win-crt-stdio-l1-1-0.dll
+    api-ms-win-crt-environment-l1-1-0.dll
+    api-ms-win-crt-math-l1-1-0.dll
+    api-ms-win-crt-string-l1-1-0.dll
+    api-ms-win-crt-convert-l1-1-0.dll
+    api-ms-win-crt-filesystem-l1-1-0.dll
+    api-ms-win-crt-utility-l1-1-0.dll
+    api-ms-win-crt-time-l1-1-0.dll
+
+  Image has the following delay load dependencies:
+
+    SHELL32.dll
+    ole32.dll
+
+  Summary
+
+      136000 .data
+      2D5000 .pdata
+     1AE5000 .rdata
+       AD000 .reloc
+        1000 .rsrc
+     54E7000 .text
