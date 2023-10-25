@@ -31,39 +31,19 @@ jobs:
           swift_release_tags=$(yq eval '.[] | select(.platforms[].name == "Windows 10") | .tag' swift-org/_data/builds/swift_releases.yml)
           readarray -t swift_release_tags_array <<< "$swift_release_tags"
           echo "tags=${swift_release_tags_array[*]}" >> $GITHUB_OUTPUT
-      - name: Setup Python 3.5
+      - name: Setup Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.5'
-      - name: Setup Python 3.6
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.6'
-      - name: Setup Python 3.7
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.7'
-      - name: Setup Python 3.8
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.8'
-      - name: Setup Python 3.9
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.9'
-      - name: Setup Python 3.10
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.10'
-      - name: Setup Python 3.11
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.11'
-      - name: Setup Python 3.12
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.12'
-      - name: Set up Visual Studio shell
+          python-version: |
+            3.5
+            3.6
+            3.7
+            3.8
+            3.9
+            3.10
+            3.11
+            3.12
+      - name: Setup Visual Studio shell
         uses: egor-tensin/vs-shell@v2
       - name: Download and set up WiX v4
         id: setup-wix
@@ -73,16 +53,6 @@ jobs:
           $wixArchivePath = Join-Path $env:TEMP wix4.nupkg.zip
           Invoke-WebRequest -Uri "https://www.nuget.org/api/v2/package/wix" -OutFile $wixArchivePath
           Expand-Archive -Path $wixArchivePath -DestinationPath $wixPath -Force
-
-          # Set up global cache directory
-          $installerExtractPath = Join-Path $env:TEMP cache
-          $toolchainExtractPath = Join-Path $env:TEMP toolchain
-          if (!(Test-Path -Path $installerExtractPath -PathType Container)) {
-            New-Item -Path $installerExtractPath -ItemType Directory
-          }
-          if (!(Test-Path -Path $toolchainExtractPath -PathType Container)) {
-            New-Item -Path $toolchainExtractPath -ItemType Directory
-          }
 
           # Save WiX executable path to output
           $wixPath = Join-Path $env:TEMP wix4 tools net6.0 any wix.exe
@@ -122,26 +92,27 @@ jobs:
             Invoke-WebRequest -Uri $url -OutFile $installerPath
             Write-Output "::endgroup::"
 
-            # Extract and install the toolchain
+            # Install the toolchain
             Write-Output "::group::Install $tag toolchain"
-            $installerExtractPath = Join-Path $env:TEMP cache $tag
-            & $wixPath burn extract $installerPath -o $installerExtractPath
-            $toolchainExtractPath = Join-Path $env:TEMP toolchain $tag
-            $msiFiles = Get-ChildItem -Path $installerExtractPath -File
-            foreach ($msiFile in $msiFiles) {
-              & msiexec.exe /i $($msiFile.FullName) /qn INSTALLDIR=$toolchainExtractPath | Write-Verbose
-            }
+            & $installerPath /install /quiet /norestart | Write-Verbose
             Write-Output "::endgroup::"
 
             # Dump and save the DLL dependencies
             Write-Output "::group::Dump LLDB dependencies for $tag"
-            $libLLDBPath = "$toolchainExtractPath\Library\Developer\Toolchains\unknown-Asserts-development.xctoolchain\usr\bin\liblldb.dll"
+            $libLLDBPath = "$($env:SystemDrive)\Library\Developer\Toolchains\unknown-Asserts-development.xctoolchain\usr\bin\liblldb.dll"
             & dumpbin.exe /DEPENDENTS $libLLDBPath | Out-File -FilePath $lldbDependencyPath
 
             # Collect the result only if dumpbin succeed
             if ($?) {
               $collectedTags += $tag
+            } else {
+              Write-Output "::error DUMPBIN.exe failed for $tag toolchain"
             }
+            Write-Output "::endgroup::"
+
+            # Uninstall the toolchain
+            Write-Output "::group::Uninstall $tag toolchain"
+            & $installerPath /uninstall /quiet /norestart | Write-Verbose
             Write-Output "::endgroup::"
           }
 
