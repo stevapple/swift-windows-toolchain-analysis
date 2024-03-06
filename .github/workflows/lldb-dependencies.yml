@@ -71,9 +71,17 @@ jobs:
             & $installerPath /install /quiet /norestart | Write-Verbose
             Write-Output "::endgroup::"
 
+            # Detect the toolchain installation root
+            $installerVersion = (Get-Item -path $installerPath).VersionInfo.ProductVersion
+            if ([version]$installerVersion -lt [version]5.10) {
+              $toolchainRoot = "$($env:SystemDrive)\Library\Developer\Toolchains\unknown-Asserts-development.xctoolchain"
+            } else {
+              $toolchainRoot = "$($env:LOCALAPPDATA)\Programs\Swift\Toolchains\$installerVersion+Asserts"
+            }
+
             # Dump and save the DLL dependencies
             Write-Output "::group::Dump LLDB dependencies for $tag"
-            $libLLDBPath = "$($env:SystemDrive)\Library\Developer\Toolchains\unknown-Asserts-development.xctoolchain\usr\bin\liblldb.dll"
+            $libLLDBPath = "$toolchainRoot\usr\bin\liblldb.dll"
             & dumpbin.exe /DEPENDENTS $libLLDBPath | Out-File -FilePath $lldbDependencyPath
 
             # Collect the result only if dumpbin succeed
