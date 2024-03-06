@@ -1,0 +1,68 @@
+Microsoft (R) COFF/PE Dumper Version 14.38.33135.0
+Copyright (C) Microsoft Corporation.  All rights reserved.
+
+
+Dump of file C:\Users\runneradmin\AppData\Local\Programs\Swift\Toolchains\5.10.0+Asserts\usr\bin\liblldb.dll
+
+File Type: DLL
+
+  Image has the following dependencies:
+
+    python39.dll
+    dbghelp.dll
+    SwiftCompilerPluginMessageHandling.dll
+    SwiftOperators.dll
+    SwiftSyntaxMacroExpansion.dll
+    SwiftSyntaxMacros.dll
+    SwiftSyntaxBuilder.dll
+    SwiftParserDiagnostics.dll
+    SwiftBasicFormat.dll
+    SwiftParser.dll
+    SwiftDiagnostics.dll
+    SwiftSyntax.dll
+    RPCRT4.dll
+    VERSION.dll
+    WS2_32.dll
+    PSAPI.DLL
+    ADVAPI32.dll
+    KERNEL32.dll
+    OLEAUT32.dll
+    MSVCP140.dll
+    swiftCore.dll
+    VCRUNTIME140.dll
+    VCRUNTIME140_1.dll
+    api-ms-win-crt-runtime-l1-1-0.dll
+    api-ms-win-crt-heap-l1-1-0.dll
+    api-ms-win-crt-stdio-l1-1-0.dll
+    api-ms-win-crt-environment-l1-1-0.dll
+    api-ms-win-crt-math-l1-1-0.dll
+    api-ms-win-crt-string-l1-1-0.dll
+    api-ms-win-crt-convert-l1-1-0.dll
+    api-ms-win-crt-filesystem-l1-1-0.dll
+    api-ms-win-crt-utility-l1-1-0.dll
+    api-ms-win-crt-time-l1-1-0.dll
+
+  Image has the following delay load dependencies:
+
+    SHELL32.dll
+    ole32.dll
+
+  Summary
+
+      19E000 .data
+      35F000 .pdata
+     2061000 .rdata
+       D4000 .reloc
+        1000 .rsrc
+        1000 .sw5asty
+        1000 .sw5bltn
+        1000 .sw5cptr
+        4000 .sw5flmd
+        1000 .sw5hash
+        1000 .sw5mpen
+        1000 .sw5prt
+        1000 .sw5prtc
+        4000 .sw5rfst
+        1000 .sw5tymd
+        2000 .sw5tyrf
+     62A3000 .text
